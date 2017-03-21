@@ -1,5 +1,5 @@
-import {AppRegistry} from react-native;
-import Hunt from ./hunt.js;
+import {AppRegistry} from 'react-native';
+import Hunt from './hunt.js';
 
 AppRegistry.registerComponent('hunt', () => Hunt);
 

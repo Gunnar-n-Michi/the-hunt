@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import { configureStore } from './store';
+import { Provider } from 'react-redux';
+import { StackNavigator } from 'react-navigation';
+import * as NavigationService from './NavigationService';
+import SessionView from './SessionView';
+
 import {
   AppRegistry,
   StyleSheet,
@@ -6,24 +12,38 @@ import {
   View
 } from 'react-native';
 
+
 export default class hunt extends Component {
+  constructor (props) {
+    super(props);
+    this.state = { store: configureStore() };
+  }
+
+  componentDidMount () {
+    NavigationService.setNavigator(this.navigator);
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to the hunt!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
+      <Provider store={this.state.store}>
+        <AppNavigator ref={(nav) => { this.navigator = nav; }}/>
+      </Provider>
     );
   }
 }
+
+const AppNavigator = StackNavigator (
+  {
+  SessionView: { screen: SessionView },
+  },
+  {
+    navigationOptions: {
+      header: {
+        visible: true
+      }
+    }
+  }
+)
 
 const styles = StyleSheet.create({
   container: {
