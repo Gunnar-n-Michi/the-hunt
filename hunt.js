@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { configureStore } from './store';
+import { configureStore } from './store/store';
 import { Provider } from 'react-redux';
-import { StackNavigator } from 'react-navigation';
-import * as NavigationService from './NavigationService';
-import SessionView from './SessionView';
+import { StackNavigator, DrawerNavigator } from 'react-navigation';
+import * as NavigationService from './utils/navigationService';
+import SessionView from './views/sessionView';
 
 import {
   AppRegistry,
@@ -38,8 +38,9 @@ const AppNavigator = StackNavigator (
   },
   {
     navigationOptions: {
+      title: 'Home Screen',
       header: {
-        visible: true
+        visible: false
       }
     }
   }
