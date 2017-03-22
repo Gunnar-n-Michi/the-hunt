@@ -11,6 +11,7 @@
     "react": "15.4.2",
     "react-native": "0.42.3",
     "react-native-fcm": "^6.1.0",
+    "react-native-mauron85-background-geolocation": "^0.2.0-alpha.7",
     "react-navigation": "^1.0.0-beta.7",
     "react-redux": "^5.0.3",
     "redux": "^3.6.0",
