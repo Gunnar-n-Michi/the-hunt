@@ -26,7 +26,9 @@ class SessionView extends React.Component {
 
   _handlePress = () => {
     console.log ("A Press");
+    const { navigate } = this.props.navigation;
     this.props.setAppState(this.props.appIsReady);
+    navigate('MapView');
   }
 }
 

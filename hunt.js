@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
 import SessionView from './views/sessionView';
+import MapView from './views/mapView';
 
 import {
   AppRegistry,
@@ -35,6 +36,7 @@ export default class hunt extends Component {
 const AppNavigator = StackNavigator (
   {
   SessionView: { screen: SessionView },
+  MapView: { screen: MapView },
   },
   {
     navigationOptions: {
