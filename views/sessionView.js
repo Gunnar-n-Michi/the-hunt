@@ -1,17 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text } from 'react-native';
+import Database from '../modules/database'
 
 
 class SessionView extends React.Component {
   constructor(props) {
    super(props);
    this.state = { text: 'Name' };
-  //  var initFirebase = new Auth
+   var initFirebase = new Database('session_gbg')
    setTimeout(function () {
-    //  console.log(initFirebase.getUserId());
-    //  initFirebase.storeData()
-  }, 2000);
+     initFirebase.setCurrentPosition('first', 66412424126);
+  }, 10000);
+   setTimeout(function () {
+     initFirebase.setCurrentPosition('second', 666);
+  }, 15000);
  }
 
   render() {
@@ -30,6 +33,11 @@ class SessionView extends React.Component {
     this.props.setAppState(this.props.appIsReady);
     navigate('MapView');
   }
+
+  componentWillUnmount() {
+    initFirebase.deleteUser();
+  }
+
 }
 
 const styles = StyleSheet.create({
