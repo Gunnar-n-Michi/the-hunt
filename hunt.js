@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
 import SessionView from './views/sessionView';
-import loc from './utils/location'
+import geo from './utils/geo'
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 // import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 
@@ -27,7 +27,7 @@ export default class hunt extends Component {
   }
 
   componentWillMount(){
-    loc.initializeLocation();
+    geo.initializeLocation();
   }
 
 
