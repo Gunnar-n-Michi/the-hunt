@@ -3,6 +3,7 @@ package com.hunt;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.marianhello.react.BackgroundGeolocationPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactNativeHost;
