@@ -30,10 +30,12 @@ export default class hunt extends Component {
 
   componentWillMount(){
     geo.initializeGeo(this._handleGeoLocation);
-    let unsubscribe = this.store.subscribe(this._stateIsChanged)
+    // let unsubscribe = this.store.subscribe(this._stateIsChanged)
     global.db = new Database('session_gbg', this.store);
     global.db.suscribeToNewUserAdded((data) => {
-      this.store.dispatch(addNewUser(data.key, data.val()));
+      let currentUser = data.key
+      this.store.dispatch(addNewUser(currentUser, data.val()));
+      global.db.suscribeToUserPosition(currentUser, this._userPosition);
     });
   }
 
@@ -49,14 +51,14 @@ export default class hunt extends Component {
     );
   }
 
-  _stateIsChanged = () => {
-    let state = this.store.getState();
-    let oldUser = currentUser
-     currentUser = state.userInfo.currentUser;
-     if (oldUser !== currentUser) {
-       global.db.suscribeToUserPosition(currentUser, this._userPosition);
-     }
-  }
+  // _stateIsChanged = () => {
+  //   let state = this.store.getState();
+  //   let oldUser = currentUser
+  //    currentUser = state.userInfo.currentUser;
+  //    if (oldUser !== currentUser) {
+  //      global.db.suscribeToUserPosition(currentUser, this._userPosition);
+  //    }
+  // }
 
   _handleGeoLocation(location){
     global.db.setCurrentPosition(location)
