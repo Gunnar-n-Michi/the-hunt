@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">hunt</string>
+    <string name="account_type">com.hunt.account</string>
+    <string name="content_authority">com.hunt.authority</string>
 </resources>
