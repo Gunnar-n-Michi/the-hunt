@@ -1,7 +1,6 @@
 import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 
-export default class geo{
-  var config = {
+var config = {
     desiredAccuracy: 10,
     stationaryRadius: 50,
     distanceFilter: 50,
@@ -15,12 +14,10 @@ export default class geo{
     interval: 10000,
     fastestInterval: 5000,
     activitiesInterval: 10000,
-    stopOnStillActivity: false,
-    // url: 'http://192.168.81.15:3000/location',
-    // httpHeaders: {
-    //   'X-FOO': 'bar'
-    // }
+    stopOnStillActivity: false
   }
+
+export default class geo{
 
   static reconfigure(options){
     config = options;
@@ -36,7 +33,7 @@ export default class geo{
     BackgroundGeolocation.configure(config);
   }
 
-  static initializeGeo = () =>{
+  static initializeGeo = (onLocation, onStationary) =>{
     BackgroundGeolocation.configure(config);
 
     BackgroundGeolocation.on('location', (location) => {

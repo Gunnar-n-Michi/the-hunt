@@ -4,10 +4,11 @@ import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
 import SessionView from './views/sessionView';
-import geo from './utils/geo'
+import geo from './modules/geo'
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 // import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 import MapView from './views/mapView';
+import Database from './modules/database'
 
 import {
   AppRegistry,
@@ -20,16 +21,20 @@ import {
 export default class hunt extends Component {
   constructor (props) {
     super(props);
-    this.state = {
-      store: configureStore(),
-      // lastPosition: 'unknown'
-    };
+    this.state = { store: configureStore() };
+    this.db = null;
   }
 
-  componentWillMount(){
+  componentWillMount = () => {
     geo.initializeGeo();
+    this.db = new Database('session_gbg')
+    setTimeout(() => {
+      this.db.setCurrentPosition('first', 66412424126);
+   }, 10000);
+    setTimeout(() => {
+      this.db.setCurrentPosition('second', 666);
+   }, 15000);
   }
-
 
 
   componentWillUnmount(){
@@ -114,9 +119,9 @@ export default class hunt extends Component {
     // });
   }
 
-  render() {
+  render = () => {
     return (
-      <Provider store={this.state.store}>
+      <Provider store={this.state.store} db={this.db}>
         <AppNavigator ref={(nav) => { this.navigator = nav; }}/>
       </Provider>
     );
