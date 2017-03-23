@@ -1,6 +1,20 @@
 import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
+import { Platform } from 'react-native';
 
-var config = {
+var config = {}
+if (Platform.OS === 'ios'){
+  config = {
+    desiredAccuracy: 10,
+    stationaryRadius: 50,
+    distanceFilter: 50,
+    stopOnTerminate: true,
+    locationTimeout: 30,
+    debug: true,
+    activityType: 'Fitness',
+    saveBatteryOnBackground: false
+  }
+}else{
+  config = {
     desiredAccuracy: 10,
     stationaryRadius: 50,
     distanceFilter: 50,
@@ -16,6 +30,8 @@ var config = {
     activitiesInterval: 10000,
     stopOnStillActivity: false
   }
+}
+
 
 export default class geo{
 
@@ -34,6 +50,7 @@ export default class geo{
   }
 
   static initializeGeo = (_onLocation, _onStationary) =>{
+    console.log ("INIT GEO: ", BackgroundGeolocation.configure, "config: ", config);
     // var onLocation = _onLocation;
     // console.log ("GEO STUFF: ", _onLocation);
     BackgroundGeolocation.configure(config);

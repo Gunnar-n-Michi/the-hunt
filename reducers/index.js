@@ -1,10 +1,10 @@
-import appStates from './appStates';
-import setCurrentUser from './setCurrentUser';
+import uiState from './uiState';
+import userInfo from './userInfo';
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers( {
-  appStates: appStates,
-  setCurrentUser: setCurrentUser
+  uiState,
+  userInfo
 });
 
 export default rootReducer;

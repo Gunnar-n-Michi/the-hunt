@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text } from 'react-native';
+import { setRunning } from '../actions/uiStateActions'
 
 
 
@@ -14,7 +15,7 @@ class SessionView extends React.Component {
     console.log (this.props)
     return (
       <View style={styles.container}>
-        <Text>{this.props.appIsReady ? "True" : "False"}</Text>
+        <Text>{this.props.running ? "True" : "False"}</Text>
         <Button onPress={this._handlePress.bind(this)} title="Click me"></Button>
       </View>
     );
@@ -23,7 +24,7 @@ class SessionView extends React.Component {
   _handlePress = () => {
     console.log ("A Press");
     const { navigate } = this.props.navigation;
-    this.props.setAppState(this.props.appIsReady);
+    this.props.setRunning(true);
     navigate('MapView');
   }
 
@@ -48,29 +49,22 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    appIsReady: state.appStates.appIsReady
+    running: state.uiState.running
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    setAppState: (isActive) => {
-      var appState = null
-      console.log ('OwnProps: ', ownProps);
-      if (isActive){
-        appState = 'STOP'
-      } else {
-        appState = 'START'
-      }
-      dispatch({type: appState})
+    setRunning: (isRunning) => {
+      dispatch(setRunning(isRunning))
     }
   }
 }
 
-const home = connect(
+const sessionView = connect(
   mapStateToProps,
   mapDispatchToProps
 )(SessionView)
 
 
-export default home
+export default sessionView

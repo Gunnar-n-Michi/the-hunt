@@ -1,13 +1,13 @@
 import * as firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
 import { store } from '../store/store';
-import { setCurrentUser } from '../actions/setCurrentUser'
+import { setCurrentUser } from '../actions/userInfoActions'
 
 export default class Database {
-  constructor(session, state) {
+  constructor(session, store) {
     this.session = session
     this.uid = null
-    this.store = store();
+    this.store = store;
 
     // AsyncStorage.clear()
 
@@ -23,17 +23,9 @@ export default class Database {
     firebase.initializeApp(firebaseConfig);
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log ('change on user', user.uid);
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
-
-        console.log("STORE: ", this.store);
         this.store.dispatch(setCurrentUser(this.uid));
-
-        data = firebase.database().ref('/' + this.session + '/coords/' + this.uid + '/');
-        data.on('child_added', function(snapshot) {
-          console.log("subscription triggered: ", snapshot.key,  snapshot.val());
-        });
         this.initGameData({
           coords: {
             [this.uid]: {
@@ -93,11 +85,10 @@ export default class Database {
   }
 
   suscribeToUserPosition = (uid, callback) => {
-    console.log("session: ", this.session, "uid: ", uid);
+    // console.log("session: ", this.session, "uid: ", uid);
     data = firebase.database().ref('/' + this.session + '/coords/' + uid + '/');
-    data.on('value', function(snapshot) {
-      console.log("subscription triggered");
-      callback(snapshot.val())
+    data.on('child_added', function(snapshot) {
+      callback(snapshot);
     });
   }
 }
