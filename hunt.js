@@ -4,11 +4,13 @@ import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
 import SessionView from './views/sessionView';
-import geo from './modules/geo'
+import geo from './modules/geo';
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 // import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 import MapView from './views/mapView';
-import Database from './modules/database'
+import Database from './modules/database';
+import { addLocationToUser, addNewUser } from './actions/userInfoActions';
+
 
 import {
   AppRegistry,
@@ -19,8 +21,7 @@ import {
 
 global.db = null;
 
-var currentValue;
-
+var currentUser;
 export default class hunt extends Component {
   constructor (props) {
     super(props);
@@ -29,11 +30,11 @@ export default class hunt extends Component {
 
   componentWillMount(){
     geo.initializeGeo(this._handleGeoLocation);
-    // this._listenOnStoreChanges()
     let unsubscribe = this.store.subscribe(this._stateIsChanged)
     global.db = new Database('session_gbg', this.store);
-
-    // global.db.suscribeToUserPosition(global.db.getUserId(), this._userPosition);
+    global.db.suscribeToNewUserAdded((data) => {
+      this.store.dispatch(addNewUser(data.key, data.val()));
+    });
   }
 
   componentDidMount () {
@@ -50,19 +51,21 @@ export default class hunt extends Component {
 
   _stateIsChanged = () => {
     let state = this.store.getState();
-    let currentUser = state.userInfo.currentUser
-    console.log("currentUser: ", currentUser);
-    if (currentUser != undefined){
-      global.db.suscribeToUserPosition(currentUser, this._userPosition);
-    }
+    let oldUser = currentUser
+     currentUser = state.userInfo.currentUser;
+     if (oldUser !== currentUser) {
+       global.db.suscribeToUserPosition(currentUser, this._userPosition);
+     }
   }
 
   _handleGeoLocation(location){
     global.db.setCurrentPosition(location)
   }
 
-  _userPosition(data){
+  _userPosition = (data) => {
     console.log("User position data: ", data.key, data.val());
+    let state = this.store.getState();
+    this.store.dispatch(addLocationToUser(state.userInfo.currentUser, data.val()))
   }
 }
 
