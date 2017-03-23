@@ -25,7 +25,19 @@ export default class Database {
         console.log ('change on user', user.uid);
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
-        this.initGameData({role: 'prey', coords: {}});
+        this.initGameData({
+          coords: {
+            [this.uid]: {
+            
+            }
+          },
+          users: {
+            [this.uid]: {
+              'lastUpdate': 'now',
+              'role': 'prey'
+            }
+          },
+        });
       } else {
         firebase.auth().signInAnonymously().catch(function(error) {
           let errorCode = error.code;
@@ -44,14 +56,14 @@ export default class Database {
   initGameData = (payload) => {
     console.log ('current user', this.uid);
     let updates = {};
-    updates['/' + this.session + '/' + this.uid] = payload;
+    updates['/' + this.session] = payload;
     firebase.database().ref().update(updates);
   }
 
   setCurrentPosition = (_long, _lat) => {
     let d = new Date();
     let time = d.getTime();
-    firebase.database().ref('/' + this.session + '/' + this.uid + '/coords/').update({
+    firebase.database().ref('/' + this.session + '/coords/' + '/' + this.uid).update({
       [time]: {
         long: _long,
         lat: _lat
