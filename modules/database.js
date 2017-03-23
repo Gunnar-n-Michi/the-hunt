@@ -6,6 +6,8 @@ export default class Database {
     this.session = session
     this.uid = null
 
+    // AsyncStorage.clear()
+
     const firebaseConfig = {
       apiKey: "AIzaSyDGJ2zie6mpdFyTEmwb5v-ibXAzIIJwHfk",
       authDomain: "the-hunt-9775d.firebaseapp.com",
@@ -14,6 +16,8 @@ export default class Database {
       messagingSenderId: "127434009828"
     };
 
+
+    // connect to firebase
     firebase.initializeApp(firebaseConfig);
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -57,7 +61,7 @@ export default class Database {
 
   deleteUser = () => {
     this.uid.delete().then(function() {
-      console.log ('user deleted');
+      AsyncStorage.clear();
     }, function(error) {
       console.log (error);
     });
