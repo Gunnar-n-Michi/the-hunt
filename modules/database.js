@@ -6,6 +6,8 @@ export default class Database {
     this.session = session
     this.uid = null
 
+    // AsyncStorage.clear()
+
     const firebaseConfig = {
       apiKey: "AIzaSyDGJ2zie6mpdFyTEmwb5v-ibXAzIIJwHfk",
       authDomain: "the-hunt-9775d.firebaseapp.com",
@@ -14,14 +16,26 @@ export default class Database {
       messagingSenderId: "127434009828"
     };
 
+    // connect to firebase
     firebase.initializeApp(firebaseConfig);
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log ('change on user', user.uid);
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
-        this.initGameData({role: 'prey', coords: {}});
+        this.initGameData({
+          coords: {
+            [this.uid]: {
+
+            }
+          },
+          users: {
+            [this.uid]: {
+              'lastUpdate': 'now',
+              'role': 'prey'
+            }
+          },
+        });
       } else {
         firebase.auth().signInAnonymously().catch(function(error) {
           let errorCode = error.code;
@@ -40,14 +54,14 @@ export default class Database {
   initGameData = (payload) => {
     console.log ('current user', this.uid);
     let updates = {};
-    updates['/' + this.session + '/' + this.uid] = payload;
+    updates['/' + this.session] = payload;
     firebase.database().ref().update(updates);
   }
 
   setCurrentPosition = (_long, _lat) => {
     let d = new Date();
     let time = d.getTime();
-    firebase.database().ref('/' + this.session + '/' + this.uid + '/coords/').update({
+    firebase.database().ref('/' + this.session + '/coords/' + '/' + this.uid).update({
       [time]: {
         long: _long,
         lat: _lat
@@ -57,7 +71,7 @@ export default class Database {
 
   deleteUser = () => {
     this.uid.delete().then(function() {
-      console.log ('user deleted');
+      AsyncStorage.clear();
     }, function(error) {
       console.log (error);
     });
