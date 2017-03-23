@@ -7,7 +7,7 @@ import SessionView from './views/sessionView';
 import geo from './utils/geo'
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 // import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
-
+import MapView from './views/mapView';
 
 import {
   AppRegistry,
@@ -128,6 +128,7 @@ export default class hunt extends Component {
 const AppNavigator = StackNavigator (
   {
   SessionView: { screen: SessionView },
+  MapView: { screen: MapView },
   },
   {
     navigationOptions: {
@@ -138,6 +139,7 @@ const AppNavigator = StackNavigator (
     }
   }
 )
+
 
 const styles = StyleSheet.create({
   container: {
