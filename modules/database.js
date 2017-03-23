@@ -16,10 +16,8 @@ export default class Database {
       messagingSenderId: "127434009828"
     };
 
-
     // connect to firebase
     firebase.initializeApp(firebaseConfig);
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log ('change on user', user.uid);
@@ -28,7 +26,7 @@ export default class Database {
         this.initGameData({
           coords: {
             [this.uid]: {
-            
+
             }
           },
           users: {
