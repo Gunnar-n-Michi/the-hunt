@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
 import SessionView from './views/sessionView';
-import geo from './utils/geo'
+import geo from './modules/geo'
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 // import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 import MapView from './views/mapView';
@@ -26,6 +26,7 @@ export default class hunt extends Component {
   }
 
   componentWillMount = () => {
+    geo.initializeGeo();
     this.db = new Database('session_gbg')
     setTimeout(() => {
       this.db.setCurrentPosition('first', 66412424126);
@@ -34,11 +35,6 @@ export default class hunt extends Component {
       this.db.setCurrentPosition('second', 666);
    }, 15000);
   }
-
-  componentWillMount(){
-    geo.initializeGeo();
-  }
-
 
 
   componentWillUnmount(){
