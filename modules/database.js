@@ -24,19 +24,7 @@ export default class Database {
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
         this.store.dispatch(setCurrentUser(this.uid));
-        this.initGameData({
-          coords: {
-            [this.uid]: {
-
-            }
-          },
-          users: {
-            [this.uid]: {
-              'lastUpdate': 'now',
-              'role': 'prey'
-            }
-          },
-        });
+        this.addUserToDatabase(this.uid, {role: 'prey', lastUpdate: 121310});
       } else {
         firebase.auth().signInAnonymously().catch(function(error) {
           let errorCode = error.code;
@@ -52,11 +40,10 @@ export default class Database {
   }
 
 
-  initGameData = (payload) => {
-    console.log ('current user', this.uid);
-    let updates = {};
-    updates['/' + this.session] = payload;
-    firebase.database().ref().update(updates);
+  addUserToDatabase = (uid, obj) => {
+    firebase.database().ref('/' + this.session + '/users/').update({
+      [uid]: obj
+    });
   }
 
   setCurrentPosition = (obj) => {
