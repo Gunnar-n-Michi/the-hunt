@@ -33,13 +33,15 @@ export default class geo{
     BackgroundGeolocation.configure(config);
   }
 
-  static initializeGeo = (onLocation, onStationary) =>{
+  static initializeGeo = (_onLocation, _onStationary) =>{
+    // var onLocation = _onLocation;
+    // console.log ("GEO STUFF: ", _onLocation);
     BackgroundGeolocation.configure(config);
 
     BackgroundGeolocation.on('location', (location) => {
       //handle your locations here
       console.log("location: " + JSON.stringify(location));
-      // Actions.sendLocation(location);
+      _onLocation(location);
     });
 
     BackgroundGeolocation.on('stationary', (stationaryLocation) => {

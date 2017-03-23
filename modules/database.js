@@ -1,10 +1,13 @@
 import * as firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
+import { store } from '../store/store';
+import { setCurrentUser } from '../actions/setCurrentUser'
 
 export default class Database {
-  constructor(session) {
+  constructor(session, state) {
     this.session = session
     this.uid = null
+    this.store = store();
 
     // AsyncStorage.clear()
 
@@ -23,6 +26,14 @@ export default class Database {
         console.log ('change on user', user.uid);
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
+
+        console.log("STORE: ", this.store);
+        this.store.dispatch(setCurrentUser(this.uid));
+
+        data = firebase.database().ref('/' + this.session + '/coords/' + this.uid + '/');
+        data.on('child_added', function(snapshot) {
+          console.log("subscription triggered: ", snapshot.key,  snapshot.val());
+        });
         this.initGameData({
           coords: {
             [this.uid]: {
@@ -58,14 +69,11 @@ export default class Database {
     firebase.database().ref().update(updates);
   }
 
-  setCurrentPosition = (_long, _lat) => {
+  setCurrentPosition = (obj) => {
     let d = new Date();
     let time = d.getTime();
     firebase.database().ref('/' + this.session + '/coords/' + '/' + this.uid).update({
-      [time]: {
-        long: _long,
-        lat: _lat
-      }
+      [time]: obj
     });
   }
 
@@ -78,10 +86,18 @@ export default class Database {
   }
 
   suscribeToTopic = (topic) => {
-    console.log ("Trying to Subscribe to topic: ", topic);
     data = firebase.database().ref(topic);
     data.on('value', function(snapshot) {
       console.log ("new data: ", snapshot.val())
+    });
+  }
+
+  suscribeToUserPosition = (uid, callback) => {
+    console.log("session: ", this.session, "uid: ", uid);
+    data = firebase.database().ref('/' + this.session + '/coords/' + uid + '/');
+    data.on('value', function(snapshot) {
+      console.log("subscription triggered");
+      callback(snapshot.val())
     });
   }
 }
