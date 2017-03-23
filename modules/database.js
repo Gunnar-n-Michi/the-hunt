@@ -9,8 +9,6 @@ export default class Database {
     this.uid = null
     this.store = store;
 
-    // AsyncStorage.clear()
-
     const firebaseConfig = {
       apiKey: "AIzaSyDGJ2zie6mpdFyTEmwb5v-ibXAzIIJwHfk",
       authDomain: "the-hunt-9775d.firebaseapp.com",
@@ -87,6 +85,14 @@ export default class Database {
   suscribeToUserPosition = (uid, callback) => {
     // console.log("session: ", this.session, "uid: ", uid);
     data = firebase.database().ref('/' + this.session + '/coords/' + uid + '/');
+    data.on('child_added', function(snapshot) {
+      callback(snapshot);
+    });
+  }
+
+  suscribeToNewUserAdded = (callback) => {
+    // console.log("session: ", this.session, "uid: ", uid);
+    data = firebase.database().ref('/' + this.session + '/users/');
     data.on('child_added', function(snapshot) {
       callback(snapshot);
     });
