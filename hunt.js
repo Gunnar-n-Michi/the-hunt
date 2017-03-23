@@ -27,7 +27,7 @@ export default class hunt extends Component {
   }
 
   componentWillMount(){
-    geo.initializeLocation();
+    geo.initializeGeo();
   }
 
 
