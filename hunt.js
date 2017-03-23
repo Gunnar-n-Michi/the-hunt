@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
 import SessionView from './views/sessionView';
-import geo from './modules/geo'
+// import geo from './modules/geo'
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 // import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 import MapView from './views/mapView';
@@ -28,7 +28,7 @@ export default class hunt extends Component {
   }
 
   componentWillMount(){
-    geo.initializeGeo(this._handleGeoLocation);
+    // geo.initializeGeo(this._handleGeoLocation);
     // this._listenOnStoreChanges()
     let unsubscribe = this.store.subscribe(this._stateIsChanged)
     global.db = new Database('session_gbg', this.store);
