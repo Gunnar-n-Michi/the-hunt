@@ -21,7 +21,7 @@ export default class geo{
     //   'X-FOO': 'bar'
     // }
   }
-
+ 
   static reconfigure(options){
     config = options;
     BackgroundGeolocation.configure(config);
@@ -36,7 +36,7 @@ export default class geo{
     BackgroundGeolocation.configure(config);
   }
 
-  static initializeGeo = () =>{
+  static initializeGeo = (onLocation, onStationary) =>{
     BackgroundGeolocation.configure(config);
 
     BackgroundGeolocation.on('location', (location) => {

@@ -5,6 +5,7 @@ import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
 import SessionView from './views/sessionView';
 import MapView from './views/mapView';
+import Database from './modules/database'
 
 import {
   AppRegistry,
@@ -18,15 +19,26 @@ export default class hunt extends Component {
   constructor (props) {
     super(props);
     this.state = { store: configureStore() };
+    this.db = null;
+  }
+
+  componentWillMount = () => {
+    this.db = new Database('session_gbg')
+    setTimeout(() => {
+      this.db.setCurrentPosition('first', 66412424126);
+   }, 10000);
+    setTimeout(() => {
+      this.db.setCurrentPosition('second', 666);
+   }, 15000);
   }
 
   componentDidMount () {
     NavigationService.setNavigator(this.navigator);
   }
 
-  render() {
+  render = () => {
     return (
-      <Provider store={this.state.store}>
+      <Provider store={this.state.store} db={this.db}>
         <AppNavigator ref={(nav) => { this.navigator = nav; }}/>
       </Provider>
     );

@@ -1,20 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text } from 'react-native';
-import Database from '../modules/database'
+
 
 
 class SessionView extends React.Component {
   constructor(props) {
    super(props);
    this.state = { text: 'Name' };
-   var initFirebase = new Database('session_gbg')
-   setTimeout(function () {
-     initFirebase.setCurrentPosition('first', 66412424126);
-  }, 10000);
-   setTimeout(function () {
-     initFirebase.setCurrentPosition('second', 666);
-  }, 15000);
  }
 
   render() {
@@ -36,6 +29,10 @@ class SessionView extends React.Component {
 
   componentWillUnmount() {
     initFirebase.deleteUser();
+  }
+
+  componentDidMount(){
+    console.log ('DB PROP: ', this.props);
   }
 
 }
