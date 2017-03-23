@@ -1,8 +1,10 @@
-import appStates from './appStates';
+import uiState from './uiState';
+import userInfo from './userInfo';
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers( {
-  appStates: appStates
+  uiState,
+  userInfo
 });
 
 export default rootReducer;
