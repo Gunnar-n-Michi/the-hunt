@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text, Modal } from 'react-native';
 import { setSessionName } from '../actions/sessionStateActions';
-import { setCurrentUserName } from '../actions/userInfoActions';
-
+import { setCurrentUserName, setCurrentUserId, addNewUser, addLocationToUser } from '../actions/userInfoActions';
+import Database from '../modules/database';
 
 class StartView extends React.Component {
   constructor(props){
@@ -15,7 +15,7 @@ class StartView extends React.Component {
   }
 
   componentWillMount(){
-
+    console.log("INIT This", this.context.store)
   }
 
   componentDidMount(){
@@ -76,8 +76,21 @@ class StartView extends React.Component {
   onClickContinue = () =>{
     this.setState({showSessionNameDialog: false});
     //Create the session in the firebase here.
+    global.db = new Database(this.props);
+    global.db.suscribeToNewUserAdded((data) => {
+      let currentUser = data.key
+      this.props.newUser(currentUser, data.val());
+      global.db.suscribeToUserPosition(currentUser, this._userPosition);
+    });
     const { navigate } = this.props.navigation;
-    navigate('WaitingLounge');
+    navigate('MapView');
+  }
+
+  _userPosition = (data) => {
+    console.log("User position data: ", data.key, data.val());
+    let info =  data.val();
+    this.props.newLocationToUser(this.props.state.userInfo.currentUser.uid, info);
+    // coordinate = { latitude: info.latitude, longitude: info.longitude }
   }
 }
 
@@ -91,10 +104,12 @@ const styles = StyleSheet.create({
 });
 
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+  console.log("OwnProps: ", ownProps, this)
   return {
     sessionName: state.sessionState.sessionName,
-    playerName: state.userInfo.currentUser.name
+    playerName: state.userInfo.currentUser.name,
+    state: state
   }
 }
 
@@ -105,6 +120,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     setPlayerName: (name) => {
       dispatch(setCurrentUserName(name))
+    },
+    setUserId: (uid) => {
+      dispatch(setCurrentUserId(uid))
+    },
+    newUser: (currentUser, info) => {
+      dispatch(addNewUser(currentUser, info))
+    },
+    newLocationToUser: (uid, info) => {
+      dispatch(addLocationToUser(uid, info))
     }
   }
 }
