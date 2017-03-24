@@ -41,17 +41,21 @@ export default class Database {
 
 
   addUserToDatabase = (uid, obj) => {
-    firebase.database().ref('/' + this.session + '/users/').update({
-      [uid]: obj
-    });
+    if (obj != null && obj != null){
+      firebase.database().ref('/' + this.session + '/users/').update({
+        [uid]: obj
+      });
+    }
   }
 
   setCurrentPosition = (obj) => {
     let d = new Date();
     let time = d.getTime();
-    firebase.database().ref('/' + this.session + '/coords/' + '/' + this.uid).update({
-      [time]: obj
-    });
+    if (obj != null){
+      firebase.database().ref('/' + this.session + '/coords/' + '/' + this.uid).update({
+        [time]: obj
+      });
+    }
   }
 
   deleteUser = () => {

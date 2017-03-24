@@ -14,7 +14,8 @@ export function store(intialState) {
   const store = createStore(
     rootReducer,
     intialState,
-    applyMiddleware(sagaMiddleware, logger)
+    applyMiddleware(sagaMiddleware)
+    // applyMiddleware(sagaMiddleware, logger)
   )
   // sagaMiddleware.run(mySaga)
   if (module.hot) {
