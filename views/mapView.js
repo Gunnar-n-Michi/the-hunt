@@ -21,23 +21,12 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
+
 const markers = [
   {
     coordinate: {
       latitude: LATITUDE,
       longitude: LONGITUDE,
-    },
-  },
-  {
-    coordinate: {
-      latitude: LATITUDE + 0.004,
-      longitude: LONGITUDE - 0.004,
-    },
-  },
-  {
-    coordinate: {
-      latitude: LATITUDE - 0.004,
-      longitude: LONGITUDE - 0.004,
     },
   },
 ];
@@ -49,17 +38,15 @@ class MapView extends React.Component {
     // this.state = { markers }
   }
 
-  // animate = () => {
-  //   console.log ("this State: ", this.state);
-  //   coordinate.timing({
-  //     latitude: LATITUDE + ((Math.random() - 0.8) * (LATITUDE_DELTA / 2)),
-  //     longitude: LONGITUDE + ((Math.random() - 0.8) * (LONGITUDE_DELTA / 2)),
-  //   }).start();
+  // function aMarker(props) {
+  //   const marker = props.marker;
+  //   if (marker != undefined) {
+  //     <MapContainer.Marker
+  //       coordinate={marker.coordinate}
+  //     />
+  //   }
+  //   return;
   // }
-
-  shouldComponentUpdate(nextProps, nextState) {
-	   return nextProps.coordinate.latitude != this.state.coordinate.latitude && nextProps.coordinate.longitude != this.state.coordinate.longitude;
-  }
 
   render() {
     console.log ("COORD STUFF", this.props)
@@ -97,7 +84,12 @@ class MapView extends React.Component {
       </View>
     );
   }
+
+  addPreyMarker(item) {
+    preyMarkers.push(item);
+  }
 }
+
 
 MapView.propTypes = {
   provider: MapContainer.ProviderPropType,

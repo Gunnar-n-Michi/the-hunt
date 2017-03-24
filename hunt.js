@@ -67,7 +67,10 @@ export default class hunt extends Component {
   _userPosition = (data) => {
     console.log("User position data: ", data.key, data.val());
     let state = this.store.getState();
-    this.store.dispatch(addLocationToUser(state.userInfo.currentUser, data.val()))
+    let info =  data.val()
+    this.store.dispatch(addLocationToUser(state.userInfo.currentUser, info))
+    console.log("TEETETETETE",  this);
+    // coordinate = { latitude: info.latitude, longitude: info.longitude }
   }
 }
 
