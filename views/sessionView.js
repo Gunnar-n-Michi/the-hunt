@@ -9,7 +9,7 @@ class SessionView extends React.Component {
   constructor(props) {
    super(props);
    this.state = { text: 'Name' };
- }
+  }
 
   render() {
     console.log (this.props)

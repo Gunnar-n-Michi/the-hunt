@@ -3,13 +3,15 @@ import { store } from './store/store';
 import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
-import SessionView from './views/sessionView';
 // import geo from './modules/geo';
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
-// import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
+import StartView from './views/startView';
+import WaitingLounge from './views/waitingLounge'
+import SessionView from './views/sessionView';
 import MapView from './views/mapView';
 import Database from './modules/database';
 import { addLocationToUser, addNewUser } from './actions/userInfoActions';
+import { setSessionName } from './actions/sessionStateActions';
 
 
 import {
@@ -31,12 +33,12 @@ export default class hunt extends Component {
   componentWillMount(){
     // geo.initializeGeo(this._handleGeoLocation);
     // let unsubscribe = this.store.subscribe(this._stateIsChanged)
-    global.db = new Database('session_gbg', this.store);
-    global.db.suscribeToNewUserAdded((data) => {
-      let currentUser = data.key
-      this.store.dispatch(addNewUser(currentUser, data.val()));
-      global.db.suscribeToUserPosition(currentUser, this._userPosition);
-    });
+    // global.db = new Database('session_gbg', this.store);
+    // global.db.suscribeToNewUserAdded((data) => {
+    //   let currentUser = data.key
+    //   this.store.dispatch(addNewUser(currentUser, data.val()));
+    //   global.db.suscribeToUserPosition(currentUser, this._userPosition);
+    // });
   }
 
   componentDidMount () {
@@ -61,7 +63,7 @@ export default class hunt extends Component {
   // }
 
   _handleGeoLocation(location){
-    global.db.setCurrentPosition(location)
+    // global.db.setCurrentPosition(location)
   }
 
   _userPosition = (data) => {
@@ -78,8 +80,10 @@ export default class hunt extends Component {
 
 const AppNavigator = StackNavigator (
   {
-  SessionView: { screen: SessionView },
-  MapView: { screen: MapView },
+    StartView: {screen: StartView},
+    WaitingLounge: {screen: WaitingLounge},
+    SessionView: { screen: SessionView },
+    MapView: { screen: MapView },
   },
   {
     navigationOptions: {
