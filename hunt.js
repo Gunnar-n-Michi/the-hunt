@@ -3,13 +3,12 @@ import { store } from './store/store';
 import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
-// import geo from './modules/geo';
+import geo from './modules/geo';
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 import StartView from './views/startView';
 import WaitingLounge from './views/waitingLounge'
 import SessionView from './views/sessionView';
 import MapView from './views/mapView';
-import Database from './modules/database';
 import { addLocationToUser, addNewUser } from './actions/userInfoActions';
 import { setSessionName } from './actions/sessionStateActions';
 
@@ -31,14 +30,8 @@ export default class hunt extends Component {
   }
 
   componentWillMount(){
-    // geo.initializeGeo(this._handleGeoLocation);
+    geo.initializeGeo(this._handleGeoLocation);
     // let unsubscribe = this.store.subscribe(this._stateIsChanged)
-    // global.db = new Database('session_gbg', this.store);
-    // global.db.suscribeToNewUserAdded((data) => {
-    //   let currentUser = data.key
-    //   this.store.dispatch(addNewUser(currentUser, data.val()));
-    //   global.db.suscribeToUserPosition(currentUser, this._userPosition);
-    // });
   }
 
   componentDidMount () {
@@ -47,7 +40,7 @@ export default class hunt extends Component {
 
   render = () => {
     return (
-      <Provider store={this.store} db={this.db}>
+      <Provider store={this.store}>
         <AppNavigator ref={(nav) => { this.navigator = nav; }}/>
       </Provider>
     );
@@ -63,17 +56,11 @@ export default class hunt extends Component {
   // }
 
   _handleGeoLocation(location){
-    // global.db.setCurrentPosition(location)
+    if (global.db != null){
+      global.db.setCurrentPosition(location)
+    }
   }
 
-  _userPosition = (data) => {
-    console.log("User position data: ", data.key, data.val());
-    let state = this.store.getState();
-    let info =  data.val()
-    this.store.dispatch(addLocationToUser(state.userInfo.currentUser, info))
-    console.log("TEETETETETE",  this);
-    // coordinate = { latitude: info.latitude, longitude: info.longitude }
-  }
 }
 
 //

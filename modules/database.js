@@ -4,10 +4,11 @@ import { store } from '../store/store';
 import { setCurrentUserId } from '../actions/userInfoActions'
 
 export default class Database {
-  constructor(session, store) {
-    this.session = session
+  constructor(props) {
+    console.log("STATATATATTE: ", props);
+    this.session = props.sessionName
     this.uid = null
-    this.store = store;
+    this.playerName = props.playerName
 
     const firebaseConfig = {
       apiKey: "AIzaSyDGJ2zie6mpdFyTEmwb5v-ibXAzIIJwHfk",
@@ -23,8 +24,9 @@ export default class Database {
       if (user) {
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
-        this.store.dispatch(setCurrentUserId(this.uid));
-        this.addUserToDatabase(this.uid, {role: 'prey', lastUpdate: 121310});
+        console.log("In Database Store: ", this.store);
+        props.setUserId(this.uid);
+        this.addUserToDatabase(this.uid, {name: this.playerName, role: 'hunter'});
       } else {
         firebase.auth().signInAnonymously().catch(function(error) {
           let errorCode = error.code;
