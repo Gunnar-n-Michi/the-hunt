@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
 import { store } from '../store/store';
-import { setCurrentUser } from '../actions/userInfoActions'
+import { setCurrentUserId } from '../actions/userInfoActions'
 
 export default class Database {
   constructor(session, store) {
@@ -23,7 +23,7 @@ export default class Database {
       if (user) {
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
-        this.store.dispatch(setCurrentUser(this.uid));
+        this.store.dispatch(setCurrentUserId(this.uid));
         this.addUserToDatabase(this.uid, {role: 'prey', lastUpdate: 121310});
       } else {
         firebase.auth().signInAnonymously().catch(function(error) {

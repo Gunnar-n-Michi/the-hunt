@@ -1,9 +1,16 @@
 import * as types from './actionTypes';
 
-export function setCurrentUser(uid) {
+export function setCurrentUserId(uid) {
   return {
-    type: types.SET_CURRENT_USER,
+    type: types.SET_CURRENT_USER_ID,
     uid
+  };
+}
+
+export function setCurrentUserName(name) {
+  return {
+    type: types.SET_CURRENT_USER_NAME,
+    name
   };
 }
 
