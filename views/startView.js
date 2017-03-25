@@ -1,9 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text, Modal } from 'react-native';
+import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text, Modal, Dimensions } from 'react-native';
 import { setSessionName } from '../actions/sessionStateActions';
 import { setCurrentUserName, setCurrentUserId, addNewUser, addLocationToUser } from '../actions/userInfoActions';
 import Database from '../modules/database';
+import Col from '../constants/colors'
+
+var {height, width} = Dimensions.get('window');
+
+console.log("H/W: ", height, width);
 
 class StartView extends React.Component {
   constructor(props){
@@ -29,27 +34,43 @@ class StartView extends React.Component {
   render(){
     return (
       <View style={styles.container}>
-        <Text>The HUNT!</Text>
-        <Text>Choose player name:</Text>
-        <TextInput
-          value = {this.props.playerName}
-          onChangeText={(text) => this.props.setPlayerName(text)}
-        />
-        <Button onPress={this.onClickCreate} title="Create game session"></Button>
-        <Button onPress={this.onClickJoin} title="Join game session"></Button>
-
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <View style={{width: width, height: 100}}>
+            <Text>The HUNT!</Text>
+            <Text>Choose player name:</Text>
+            <TextInput
+              value = {this.props.playerName}
+              onChangeText={(text) => this.props.setPlayerName(text)}
+              style={{width: width, height: 40, backgroundColor: Col.midGrey}}
+              placeholderTextColor='#a4a4a4'
+            />
+          </View>
+          <View style={{width: width, height: 100, justifyContent: 'center'}}>
+            <Button onPress={this.onClickCreate} title="Create game session"></Button>
+          </View>
+          <View style={{width: width, height: 100, justifyContent: 'center'}}>
+            <Button onPress={this.onClickJoin} title="Join game session"></Button>
+          </View>
+        </View>
         <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.showSessionNameDialog}
           onRequestClose={this.onCloseDialog}
           >
-         <View style={{marginTop: 22}}>
+         <View style={styles.inputWrapper}>
           <View>
             <Text>Choose Name of game session</Text>
             <TextInput
               value = {this.props.sessionName}
               onChangeText={(text) => this.props.setSessionName(text)}
+              style={{width: width, height: 40, backgroundColor: Col.midGrey}}
+              placeholderTextColor='#a4a4a4'
             />
             <Button onPress={this.onClickContinue} title="Continue"></Button>
 
@@ -97,11 +118,18 @@ class StartView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'grey',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center'
   },
+  inputWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
+
+
 
 
 const mapStateToProps = (state, ownProps) => {

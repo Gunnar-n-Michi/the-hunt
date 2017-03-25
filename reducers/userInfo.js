@@ -32,7 +32,7 @@ const initialUserInfoState = {
 
 const initialCurrentUserState = {
   uid: null,
-  name: ""
+  name: "Enter your player name"
 };
 
 function currentUserReducer(subState = initialCurrentUserState, action){
