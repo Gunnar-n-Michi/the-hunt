@@ -137,6 +137,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     sessionName: state.sessionState.sessionName,
     playerName: state.userInfo.currentUser.name,
+    role: state.userInfo.currentUser.role,
     state: state
   }
 }

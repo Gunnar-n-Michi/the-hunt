@@ -32,7 +32,8 @@ const initialUserInfoState = {
 
 const initialCurrentUserState = {
   uid: null,
-  name: "Enter your player name"
+  name: "Enter your player name",
+  role: "hunter"
 };
 
 function currentUserReducer(subState = initialCurrentUserState, action){
@@ -46,6 +47,11 @@ function currentUserReducer(subState = initialCurrentUserState, action){
       return {
         ...subState,
         name: action.name
+      };
+    case types.SET_CURRENT_USER_ROLE:
+      return {
+        ...subState,
+        role: action.role
       };
     default:
       return subState;
@@ -68,6 +74,23 @@ function usersReducer(subState = initialUsersState, action){
       return {
         ...subState,
         [action.uid] : { ['location']: action.location }
+      };
+    case types.SET_USER_ROLE:
+      return {
+        ...subState,
+        [action.uid] : { ['info']:  userInfoReducer(subState[action.uid].info, action.role) }
+      };
+    default:
+      return subState;
+  }
+}
+
+function userInfoReducer(subState = initialUsersState, action){
+  switch (action.type) {
+    case types.SET_USER_ROLE:
+      return {
+        ...subState,
+        role : action.role
       };
     default:
       return subState;
