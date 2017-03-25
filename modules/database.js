@@ -53,7 +53,7 @@ export default class Database {
   setCurrentPosition = (obj) => {
     let d = new Date();
     let time = d.getTime();
-    if (obj != null){
+    if (obj != null && this.uid != null){
       firebase.database().ref('/' + this.session + '/coords/' + '/' + this.uid).update({
         [time]: obj
       });
