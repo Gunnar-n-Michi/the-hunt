@@ -68,10 +68,10 @@ export default class hunt extends Component {
 
 const AppNavigator = StackNavigator (
   {
+    MapView: { screen: MapView },
     StartView: {screen: StartView},
     WaitingLounge: {screen: WaitingLounge},
-    SessionView: { screen: SessionView },
-    MapView: { screen: MapView },
+    SessionView: { screen: SessionView }
   },
   {
     navigationOptions: {

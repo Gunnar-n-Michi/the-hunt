@@ -11,6 +11,7 @@ import {
 import MapContainer from 'react-native-maps';
 import Col from '../constants/colors';
 import { connect } from 'react-redux';
+import CustomMarker from '../components/customMarker'
 import * as helpers from '../utils/helpers';
 
 const screen = Dimensions.get('window');
@@ -25,7 +26,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const markers = [
   {
-    shouldRender: false,
+    shouldRender: true,
     coordinate: {
       latitude: 48.138295,
       longitude: 11.515238,
@@ -33,6 +34,8 @@ const markers = [
   },
   {
     shouldRender: true,
+    title: "Hunter",
+    description: "Gunnar",
     coordinate: {
       latitude: LATITUDE,
       longitude: LONGITUDE,
@@ -71,9 +74,9 @@ class MapView extends React.Component {
         {markers.map(marker => (
           helpers.conditionalRender(
             marker.shouldRender,
-            <MapContainer.Marker
-              coordinate={marker.coordinate}
-            />
+            <MapContainer.Marker coordinate={marker.coordinate}>
+              <CustomMarker amount={marker.title}/>
+            </MapContainer.Marker>
           )
         ))}
       </MapContainer>
