@@ -9,14 +9,15 @@ import {
 } from 'react-native';
 
 import MapContainer from 'react-native-maps';
-import Col from '../constants/colors'
-import { connect } from 'react-redux'
+import Col from '../constants/colors';
+import { connect } from 'react-redux';
+import * as helpers from '../utils/helpers';
 
 const screen = Dimensions.get('window');
 
 const ASPECT_RATIO = screen.width / screen.height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
+const LATITUDE = 48.141288;
+const LONGITUDE = 11.517792;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
@@ -24,6 +25,14 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const markers = [
   {
+    shouldRender: false,
+    coordinate: {
+      latitude: 48.138295,
+      longitude: 11.515238,
+    },
+  },
+  {
+    shouldRender: true,
     coordinate: {
       latitude: LATITUDE,
       longitude: LONGITUDE,
@@ -36,20 +45,12 @@ class MapView extends React.Component {
     super(props);
 
     // this.state = { markers }
+    // <MapContainer.Marker
+    //   coordinate={marker.coordinate}
+    // />
   }
 
-  // function aMarker(props) {
-  //   const marker = props.marker;
-  //   if (marker != undefined) {
-  //     <MapContainer.Marker
-  //       coordinate={marker.coordinate}
-  //     />
-  //   }
-  //   return;
-  // }
-
   render() {
-    console.log ("COORD STUFF", this.props)
     return (
       <View style={styles.container}>
         <MapContainer
@@ -68,9 +69,12 @@ class MapView extends React.Component {
           }}
         >
         {markers.map(marker => (
-          <MapContainer.Marker
-            coordinate={marker.coordinate}
-          />
+          helpers.conditionalRender(
+            marker.shouldRender,
+            <MapContainer.Marker
+              coordinate={marker.coordinate}
+            />
+          )
         ))}
       </MapContainer>
         <View style={styles.buttonContainer}>
@@ -85,9 +89,11 @@ class MapView extends React.Component {
     );
   }
 
-  addPreyMarker(item) {
-    preyMarkers.push(item);
-  }
+  // addPreyMarker(item) {
+  //   preyMarkers.push(item);
+  // }
+  //
+  // {}
 }
 
 
