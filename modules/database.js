@@ -20,21 +20,54 @@ export default class Database {
 
     // connect to firebase
     firebase.initializeApp(firebaseConfig);
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        var isAnonymous = user.isAnonymous;
-        this.uid = user.uid;
-        console.log("In Database Store: ", this.store);
-        props.setUserId(this.uid);
-        this.addUserToDatabase(this.uid, {name: this.playerName, role: 'hunter'});
-      } else {
-        firebase.auth().signInAnonymously().catch(function(error) {
-          let errorCode = error.code;
-          let errorMessage = error.message;
-          console.log ('error', errorMessage);
-        });
-      }
+  }
+
+  initializeUser(){
+    var promise = new Promise(function(resolve, reject){
+      firebase.auth().onAuthStateChanged((user) => {
+        if(user){
+          resolve(user.uid);
+        }else{
+          reject(Error("fuu"));
+        }
+      })
     });
+    firebase.auth().signInAnonymously();
+    return promise;
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   if(user){
+    //
+    //   }else{}
+    // });
+    // firebase.auth().signInAnonymously().then({
+    //   this.addUserToDatabase(this.uid, {name: this.playerName, role: 'hunter'});
+    // })
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     var isAnonymous = user.isAnonymous;
+    //     this.uid = user.uid;
+    //     console.log("In Database Store: ", this.store);
+    //     // props.setUserId(this.uid);
+    //     // onAuthed(user);
+    //     // this.addUserToDatabase(this.uid, {name: this.playerName, role: 'hunter'});
+    //   } else {
+    //     firebase.auth().signInAnonymously().catch(function(error) {
+    //       let errorCode = error.code;
+    //       let errorMessage = error.message;
+    //       console.log ('error', errorMessage);
+    //     });
+    //   }
+    // });
+  }
+
+  createSession = (sessionName) => {
+    firebase.database().ref('/' + this.session).once('value', () => {
+      
+    });
+  }
+
+  joinSession = () => {
+
   }
 
   getUserId = () => {

@@ -77,11 +77,24 @@ class StartView extends React.Component {
     this.setState({showSessionNameDialog: false});
     //Create the session in the firebase here.
     global.db = new Database(this.props);
+    global.db.initializeUser().then((uid) => {
+      console.log("uid: ", uid);
+      this.props.setUserId(uid);
+    }).then(global.db.createSession(this.props.sessionName))
+    //if authed
+    // ;
+    //if successful
+    // global.db.addUserToDatabase(this.props.playerName);
+
+
     global.db.suscribeToNewUserAdded((data) => {
       let currentUser = data.key
       this.props.newUser(currentUser, data.val());
       global.db.suscribeToUserPosition(currentUser, this._userPosition);
     });
+
+
+
     const { navigate } = this.props.navigation;
     navigate('MapView');
   }
