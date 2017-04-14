@@ -9,6 +9,7 @@ export default class Database {
     this.session = props.sessionName
     this.uid = null
     this.playerName = props.playerName
+    this.role = props.role
 
     const firebaseConfig = {
       apiKey: "AIzaSyDGJ2zie6mpdFyTEmwb5v-ibXAzIIJwHfk",
@@ -26,7 +27,7 @@ export default class Database {
         this.uid = user.uid;
         console.log("In Database Store: ", this.store);
         props.setUserId(this.uid);
-        this.addUserToDatabase(this.uid, {name: this.playerName, role: 'hunter'});
+        this.addUserToDatabase(this.uid, {name: this.playerName, role: this.role});
       } else {
         firebase.auth().signInAnonymously().catch(function(error) {
           let errorCode = error.code;

@@ -3,6 +3,7 @@ package com.hunt;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import com.marianhello.react.BackgroundGeolocationPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.airbnb.android.react.maps.MapsPackage;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SvgPackage(),
           new BackgroundGeolocationPackage(),
           new FIRMessagingPackage(),
           new MapsPackage()

@@ -111,7 +111,6 @@ class StartView extends React.Component {
     console.log("User position data: ", data.key, data.val());
     let info =  data.val();
     this.props.newLocationToUser(this.props.state.userInfo.currentUser.uid, info);
-    // coordinate = { latitude: info.latitude, longitude: info.longitude }
   }
 }
 
@@ -137,6 +136,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     sessionName: state.sessionState.sessionName,
     playerName: state.userInfo.currentUser.name,
+    role: state.userInfo.currentUser.role,
     state: state
   }
 }

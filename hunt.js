@@ -3,7 +3,7 @@ import { store } from './store/store';
 import { Provider } from 'react-redux';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import * as NavigationService from './utils/navigationService';
-// import geo from './modules/geo';
+import geo from './modules/geo';
 // import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 import StartView from './views/startView';
 import WaitingLounge from './views/waitingLounge'
@@ -30,7 +30,7 @@ export default class hunt extends Component {
   }
 
   componentWillMount(){
-    // geo.initializeGeo(this._handleGeoLocation);
+    geo.initializeGeo(this._handleGeoLocation);
     // let unsubscribe = this.store.subscribe(this._stateIsChanged)
   }
 
@@ -61,16 +61,17 @@ export default class hunt extends Component {
     }
   }
 
+
 }
 
 //
 
 const AppNavigator = StackNavigator (
   {
+    MapView: { screen: MapView },
     StartView: {screen: StartView},
     WaitingLounge: {screen: WaitingLounge},
-    SessionView: { screen: SessionView },
-    MapView: { screen: MapView },
+    SessionView: { screen: SessionView }
   },
   {
     navigationOptions: {
