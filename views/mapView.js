@@ -27,6 +27,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const markers = [
   {
     shouldRender: true,
+    title: "Hunter",
+    iconType: "checkpoint",
     coordinate: {
       latitude: 48.138295,
       longitude: 11.515238,
@@ -35,6 +37,7 @@ const markers = [
   {
     shouldRender: true,
     title: "Hunter",
+    iconType: "player",
     description: "Gunnar",
     coordinate: {
       latitude: LATITUDE,
@@ -75,7 +78,7 @@ class MapView extends React.Component {
           helpers.conditionalRender(
             marker.shouldRender,
             <MapContainer.Marker coordinate={marker.coordinate}>
-              <CustomMarker amount={marker.title}/>
+              <CustomMarker description={marker.description} iconType={marker.iconType}/>
             </MapContainer.Marker>
           )
         ))}

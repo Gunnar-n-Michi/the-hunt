@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
+import * as helpers from '../utils/helpers';
 import {
   StyleSheet,
-  View,
-  Text,
+  View
 } from 'react-native';
 
 import Svg,{
@@ -19,13 +19,15 @@ import Svg,{
     Symbol,
     Use,
     Defs,
-    Stop
+    Stop,
+    Text
 } from 'react-native-svg';
 
 
 
 const propTypes = {
-  amount: PropTypes.number.isRequired,
+  description: PropTypes.string.isRequired,
+  iconType: PropTypes.string.isRequired,
   fontSize: PropTypes.number,
 };
 
@@ -35,16 +37,37 @@ const defaultProps = {
 
 class CustomMarker extends React.Component {
   render() {
-    const { fontSize, amount } = this.props;
+    const { fontSize, description, iconType } = this.props;
+    let icon;
+    if(iconType == 'checkpoint'){
+      icon = (
+        <Path fill="black" d="M40.608,20.833h-4.914V77.52h-7.025v3h18.965v-3h-7.025V20.833z M42.112,22.842v21.709c2.999-1.251,5.774,0.222,8.559,0.885  c7.743,1.844,16.778-2.5,19.159-12.924C58.063,35.487,54.562,18.559,42.112,22.842z"/>
+      )
+    }else if (iconType == 'player'){
+      icon = (
+        <G>
+          <Path fill="black" d="M55.1,36.8H44.9c-2.8,0-5,2.3-5,5v9.7c2.8,2.1,6.3,3.3,10.1,3.3s7.3-1.2,10.1-3.3v-9.7C60.1,39,57.8,36.8,55.1,36.8z"/>
+          <Path fill="black" d="M50,12.3c-14.1,0-25.5,11.4-25.5,25.6c0,3.7,0.8,7.1,2.1,10.3l22,42.7c0.6,1.2,2.2,1.2,2.8,0l22-42.7  c1.4-3.1,2.1-6.6,2.1-10.3C75.5,23.7,64.1,12.3,50,12.3z M50,58.4c-11.4,0-20.7-9.3-20.7-20.7S38.6,17,50,17  c11.4,0,20.7,9.3,20.7,20.7S61.4,58.4,50,58.4z"/>
+          <Circle cx="50" cy="29.8" r="5.2"/>
+        </G>
+      )
+    }
     return (
       <View style={styles.container}>
       <Svg
         height="64"
         width="96"
-        viewBox="0 0 64.1 96" style="enable-background:new 0 0 64.1 96;"
+        viewBox="0 0 64 96" style="enable-background:new 0 0 100 100;"
       >
-          <Path fill='red' d="M48,12A20,20,0,1,0,68,32,20,20,0,0,0,48,12Zm3.73,35.56A16,16,0,1,1,64,32,15.87,15.87,0,0,1,51.73,47.56Z"/>
-          <Path fill='red' d="M48,0a32,32,0,0,0-2.47,63.91L48,96l2.47-32.09A32,32,0,0,0,48,0Zm2.16,59.92L48,60.09l-2.16-.17a28,28,0,1,1,4.33,0Z"/>
+        { icon }
+        <Text
+            x="50"
+            y="80"
+            textAnchor="middle"
+            fontWeight="bold"
+            fontSize="16"
+            fill="blue"
+        >{description}</Text>
       </Svg>
       </View>
     );
