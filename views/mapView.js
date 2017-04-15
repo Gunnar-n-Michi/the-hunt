@@ -29,6 +29,7 @@ const markers = [
     shouldRender: true,
     title: "Hunter",
     iconType: "checkpoint",
+    description: "Checkpoint 1",
     coordinate: {
       latitude: 48.138295,
       longitude: 11.515238,
@@ -37,7 +38,17 @@ const markers = [
   {
     shouldRender: true,
     title: "Hunter",
-    iconType: "player",
+    iconType: "prey",
+    description: "Michael",
+    coordinate: {
+      latitude: 48.238295,
+      longitude: 11.515238,
+    },
+  },
+  {
+    shouldRender: true,
+    title: "Hunter",
+    iconType: "hunter",
     description: "Gunnar",
     coordinate: {
       latitude: LATITUDE,
