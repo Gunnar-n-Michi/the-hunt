@@ -22,51 +22,47 @@ export default class Database {
     firebase.initializeApp(firebaseConfig);
   }
 
-  initializeUser(){
+  initializeUserDB(){
     var promise = new Promise(function(resolve, reject){
       firebase.auth().onAuthStateChanged((user) => {
         if(user){
           resolve(user.uid);
         }else{
-          reject(Error("fuu"));
+          reject(Error("fuuuuuu"));
         }
       })
     });
     firebase.auth().signInAnonymously();
     return promise;
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if(user){
-    //
-    //   }else{}
-    // });
-    // firebase.auth().signInAnonymously().then({
-    //   this.addUserToDatabase(this.uid, {name: this.playerName, role: 'hunter'});
-    // })
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     var isAnonymous = user.isAnonymous;
-    //     this.uid = user.uid;
-    //     console.log("In Database Store: ", this.store);
-    //     // props.setUserId(this.uid);
-    //     // onAuthed(user);
-    //     // this.addUserToDatabase(this.uid, {name: this.playerName, role: 'hunter'});
-    //   } else {
-    //     firebase.auth().signInAnonymously().catch(function(error) {
-    //       let errorCode = error.code;
-    //       let errorMessage = error.message;
-    //       console.log ('error', errorMessage);
-    //     });
-    //   }
-    // });
   }
 
-  createSession = (sessionName) => {
-    firebase.database().ref('/' + this.session).once('value', () => {
-      
+  createSessionDB = (sessionName) => {
+    this.session = sessionName;
+    //TODO: Make sure the check and creation is done atomically. Otherwise we might actually end up with two users create the same session.
+    //Is the name available?
+    var create = new Promise(function(resolve, reject){
+      firebase.database().ref('/' + sessionName).once('value', (snapshot) => {
+        if(!snapshot.exists()){
+          console.log("gonna create it and put in the user!");
+          var updates = {};
+          updates[sessionName] = true;
+          resolve(firebase.database().ref().update(updates));
+        }else{
+          reject(Error("session name already taken!"));
+        }
+      });
     });
+
+    return create;
+
+    // return create.then(() => {
+    //   return firebase.database().ref('/').update(sessionName);
+    // });
+    //let's return the promise!
+    // return firebase.database().ref('/').set(this.session);
   }
 
-  joinSession = () => {
+  joinSessionDB = () => {
 
   }
 
@@ -74,16 +70,20 @@ export default class Database {
     return this.uid
   }
 
-
-  addUserToDatabase = (uid, obj) => {
-    if (obj != null && obj != null){
-      firebase.database().ref('/' + this.session + '/users/').update({
+  addUserToSessionDB = (uid, obj) => {
+    //TODO: Check so users don't pick same name.
+    // console.log("uid: " + uid + ", obj: " + obj);
+    if (uid != null && obj != null){
+      var promise = firebase.database().ref('/' + this.session + '/users/').update({
         [uid]: obj
       });
+      console.log("promise: " + promise);
+      return promise;
     }
+    throw 'wrong arguments provided. need an uid and a user object';
   }
 
-  setCurrentPosition = (obj) => {
+  addCurrentPositionDB = (obj) => {
     let d = new Date();
     let time = d.getTime();
     if (obj != null){
@@ -101,14 +101,14 @@ export default class Database {
     });
   }
 
-  suscribeToTopic = (topic) => {
+  suscribeToTopicDB = (topic) => {
     data = firebase.database().ref(topic);
     data.on('value', function(snapshot) {
       console.log ("new data: ", snapshot.val())
     });
   }
 
-  suscribeToUserPosition = (uid, callback) => {
+  subscribeToUserPositionDB = (uid, callback) => {
     // console.log("session: ", this.session, "uid: ", uid);
     data = firebase.database().ref('/' + this.session + '/coords/' + uid + '/');
     data.on('child_added', function(snapshot) {
@@ -116,7 +116,7 @@ export default class Database {
     });
   }
 
-  suscribeToNewUserAdded = (callback) => {
+  subscribeToNewUserAddedDB = (callback) => {
     // console.log("session: ", this.session, "uid: ", uid);
     data = firebase.database().ref('/' + this.session + '/users/');
     data.on('child_added', function(snapshot) {

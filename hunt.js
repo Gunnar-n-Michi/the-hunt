@@ -30,7 +30,7 @@ export default class hunt extends Component {
   }
 
   componentWillMount(){
-    geo.initializeGeo(this._handleGeoLocation);
+    // geo.initializeGeo(this._handleGeoLocation);
     // let unsubscribe = this.store.subscribe(this._stateIsChanged)
   }
 

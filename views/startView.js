@@ -10,7 +10,8 @@ class StartView extends React.Component {
     super(props);
     this.state= {
       showSessionNameDialog: false,
-      sessionName: null
+      sessionName: null,
+      createSessionFeedback: null
     };
   }
 
@@ -46,7 +47,7 @@ class StartView extends React.Component {
           >
          <View style={{marginTop: 22}}>
           <View>
-            <Text>Choose Name of game session</Text>
+            <Text>Choose Name of game session. {this.state.createSessionFeedback}</Text>
             <TextInput
               value = {this.props.sessionName}
               onChangeText={(text) => this.props.setSessionName(text)}
@@ -74,29 +75,45 @@ class StartView extends React.Component {
 
 
   onClickContinue = () =>{
-    this.setState({showSessionNameDialog: false});
+
     //Create the session in the firebase here.
-    global.db = new Database(this.props);
-    global.db.initializeUser().then((uid) => {
+    if(global.db === null){
+      global.db = new Database(this.props);
+    }
+
+    //Here is our epic setup sequence. First create user. check if session name available
+    global.db.initializeUserDB().then((uid) => {
       console.log("uid: ", uid);
       this.props.setUserId(uid);
-    }).then(global.db.createSession(this.props.sessionName))
-    //if authed
-    // ;
+    }).then(() =>{
+      return global.db.createSessionDB(this.props.sessionName);
+    }).then(
+      (success) => {
+        // console.log("promise success: " + success);
+        this.setState({showSessionNameDialog: false});
+      },
+      (error) => {
+        this.setState({createSessionFeedback: "Unavailable. Choose another name."});
+        console.log("createSession rejected: " + error);
+      }
+    ).then(()=>{
+      // console.log("adding self to user path in session");
+      return global.db.addUserToSessionDB(this.props.state.userInfo.currentUser.uid, {playerName: this.props.playerName});
+    }).then(()=>{console.log("added user");}, (error)=>{console.log("addUserToSession rejected: " + error);});
     //if successful
     // global.db.addUserToDatabase(this.props.playerName);
 
 
-    global.db.suscribeToNewUserAdded((data) => {
+    global.db.subscribeToNewUserAddedDB((data) => {
       let currentUser = data.key
       this.props.newUser(currentUser, data.val());
-      global.db.suscribeToUserPosition(currentUser, this._userPosition);
+      global.db.subscribeToUserPositionDB(currentUser, this._userPosition);
     });
 
 
 
     const { navigate } = this.props.navigation;
-    navigate('MapView');
+    // navigate('MapView');
   }
 
   _userPosition = (data) => {

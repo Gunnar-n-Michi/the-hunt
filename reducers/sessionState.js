@@ -1,7 +1,7 @@
 import * as types from '../actions/actionTypes';
 
 const initialState = {
-  sessionName: "Change this"
+  sessionName: ""
 };
 
 export default function sessionState(subState = initialState, action) {
