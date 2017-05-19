@@ -13,6 +13,7 @@ import Col from '../constants/colors';
 import { connect } from 'react-redux';
 import CustomMarker from '../components/customMarker'
 import * as helpers from '../utils/helpers';
+import GameLogic from '../modules/gameLogic';
 
 const screen = Dimensions.get('window');
 
@@ -60,11 +61,6 @@ const markers = [
 class MapView extends React.Component {
   constructor(props) {
     super(props);
-
-    // this.state = { markers }
-    // <MapContainer.Marker
-    //   coordinate={marker.coordinate}
-    // />
   }
 
   render() {
@@ -78,6 +74,8 @@ class MapView extends React.Component {
           loadingEnabled={true}
           loadingIndicatorColor={Col.lightOrange}
           loadingBackgroundColor={Col.midGrey}
+          showsPointsOfInterest={true}
+          followsUserLocation={true}
           initialRegion={{
             latitude: LATITUDE,
             longitude: LONGITUDE,
@@ -106,11 +104,9 @@ class MapView extends React.Component {
     );
   }
 
-  // addPreyMarker(item) {
-  //   preyMarkers.push(item);
-  // }
-  //
-  // {}
+  componentDidMount(){
+    global.gL = new GameLogic(this.props)
+  }
 }
 
 

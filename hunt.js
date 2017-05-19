@@ -20,7 +20,10 @@ import {
   View
 } from 'react-native';
 
+// global database
 global.db = null;
+// global gameLogic
+global.gL = null;
 
 var currentUser;
 export default class hunt extends Component {

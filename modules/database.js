@@ -1,7 +1,5 @@
 import * as firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
-import { store } from '../store/store';
-import { setCurrentUserId } from '../actions/userInfoActions'
 
 export default class Database {
   constructor(props) {
@@ -25,7 +23,6 @@ export default class Database {
       if (user) {
         var isAnonymous = user.isAnonymous;
         this.uid = user.uid;
-        console.log("In Database Store: ", this.store);
         props.setUserId(this.uid);
         this.addUserToDatabase(this.uid, {name: this.playerName, role: this.role});
       } else {
