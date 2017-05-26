@@ -4,13 +4,15 @@ export default class GameLogic {
   constructor(props) {
     console.log("GameLogic: ", props);
     console.log("Datatbase in GameLogic: ", global.db);
-    let timer = new helpers.Monoflop(this.handleGeoLocations, 10000)
+    this.timer = new helpers.Monoflop(this.handleGeoLocations)
+    this.props = props
 
-    timer.start('Test')
+    this.timer.start('Send out positions', 10000)
   }
 
   handleGeoLocations = (_data) => {
-    console.log("GeoLocation in GameLogic", _data)
+    console.log(_data, this.props)
+    this.timer.start('Update:', 10000)
   }
 
 }

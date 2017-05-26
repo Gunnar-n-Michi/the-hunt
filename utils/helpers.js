@@ -16,20 +16,22 @@ export class Monoflop {
     }
 
     start = (_data, _time) => {
+
       this.data = _data
-      global.clearTimeout(this.handler)
-      this.handler = global.setTimeout(this.callback(this.data), _time)
-      console.log ("In mon start: ", this.handler, this.data, this.callback)
+      this.handler = setTimeout(() => {
+         this.callback(this.data)
+       }, _time);
+
     }
 
     stop = (_data) => {
       this.data = _data
-      global.clearTimeout(this.handler)
+      clearTimeout(this.handler)
       this.callback(this.data)
     }
 
     clear = () => {
-      global.clearTimeout(this.handler)
+      clearTimeout(this.handler)
     }
 
 }

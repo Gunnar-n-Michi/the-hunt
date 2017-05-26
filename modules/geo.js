@@ -1,5 +1,5 @@
-import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 import { Platform } from 'react-native';
+import BackgroundGeolocation from 'react-native-mauron85-background-geolocation';
 
 var config = {}
 if (Platform.OS === 'ios'){

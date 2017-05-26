@@ -1,5 +1,6 @@
-import * as firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
+import * as firebase from 'firebase';
+
 
 export default class Database {
   constructor(props) {
