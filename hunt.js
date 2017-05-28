@@ -49,14 +49,10 @@ export default class hunt extends Component {
     );
   }
 
-  // _stateIsChanged = () => {
-  //   let state = this.store.getState();
-  //   let oldUser = currentUser
-  //    currentUser = state.userInfo.currentUser;
-  //    if (oldUser !== currentUser) {
-  //      global.db.suscribeToUserPosition(currentUser, this._userPosition);
-  //    }
-  // }
+  _stateIsChanged = () => {
+    let state = this.store.getState();
+    console.log("STATE UPDATE: ", state)
+  }
 
   _handleGeoLocation(location){
     if (global.db != null){
@@ -71,8 +67,8 @@ export default class hunt extends Component {
 
 const AppNavigator = StackNavigator (
   {
-    MapView: { screen: MapView },
     StartView: {screen: StartView},
+    MapView: { screen: MapView },
     WaitingLounge: {screen: WaitingLounge},
     SessionView: { screen: SessionView }
   },

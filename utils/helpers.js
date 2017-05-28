@@ -18,6 +18,7 @@ export class Monoflop {
     start = (_data, _time) => {
 
       this.data = _data
+      // clearTimeout(this.handler)
       this.handler = setTimeout(() => {
          this.callback(this.data)
        }, _time);

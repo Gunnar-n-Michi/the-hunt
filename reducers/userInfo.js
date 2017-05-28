@@ -59,7 +59,7 @@ function currentUserReducer(subState = initialCurrentUserState, action){
 }
 
 const initialUsersState = {
-  users: {}
+
 }
 
 function usersReducer(subState = initialUsersState, action){

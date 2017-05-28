@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    userInfo: state.userInfo
+    state: state
   }
 }
 

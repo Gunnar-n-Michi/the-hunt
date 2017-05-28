@@ -1,9 +1,9 @@
 import * as helpers from '../utils/helpers';
+import { getState } from '../store/store';
 
 export default class GameLogic {
   constructor(props) {
     console.log("GameLogic: ", props);
-    console.log("Datatbase in GameLogic: ", global.db);
     this.timer = new helpers.Monoflop(this.handleGeoLocations)
     this.props = props
 
@@ -11,7 +11,7 @@ export default class GameLogic {
   }
 
   handleGeoLocations = (_data) => {
-    console.log(_data, this.props)
+    console.log(_data, getState())
     this.timer.start('Update:', 10000)
   }
 
