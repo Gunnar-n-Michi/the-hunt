@@ -27,10 +27,14 @@ export default class hunt extends Component {
   constructor (props) {
     super(props);
     this.store = store();
+    this.state = {
+      sessionCreated: false
+    }
   }
 
   componentWillMount(){
-    // geo.initializeGeo(this._handleGeoLocation);
+    geo.initializeGeo(this.handleGeoLocation.bind(this));
+    this.store.subscribe(this.stateChanged.bind(this))
     // let unsubscribe = this.store.subscribe(this._stateIsChanged)
   }
 
@@ -46,18 +50,21 @@ export default class hunt extends Component {
     );
   }
 
-  // _stateIsChanged = () => {
-  //   let state = this.store.getState();
-  //   let oldUser = currentUser
-  //    currentUser = state.userInfo.currentUser;
-  //    if (oldUser !== currentUser) {
-  //      global.db.suscribeToUserPosition(currentUser, this._userPosition);
-  //    }
-  // }
+  stateChanged() {
+    console.log("state changed");
+    this.state.sessionCreated = this.extractSessionCreated(this.store.getState());
+    this.state.currentUser = this.store.getState().userInfo.currentUser.uid;
+  }
 
-  _handleGeoLocation(location){
-    if (global.db != null){
-      global.db.setCurrentPosition(location)
+  extractSessionCreated(state){
+    return state.sessionState.sessionCreated
+  }
+
+  handleGeoLocation(location){
+    if (global.db != null && this.state.sessionCreated){
+      console.log("trying to add position to db");
+      // global.db.setCurrentPosition(location)
+      global.db.addCurrentPositionDB(this.state.currentUser, location);
     }
   }
 
@@ -102,3 +109,27 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+//
+// const mapStateToProps = (state, ownProps) => {
+//   // console.log("OwnProps: ", ownProps, this)
+//   return {
+//     state: state
+//   }
+// }
+//
+// const mapDispatchToProps = (dispatch, ownProps) => {
+//   return {
+//     newLocationToUser: (uid, info) => {
+//       dispatch(addLocationToUser(uid, info))
+//     }
+//   }
+// }
+
+// const hunt = connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(Hunt)
+//
+//
+// export default hunt

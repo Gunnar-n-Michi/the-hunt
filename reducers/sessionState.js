@@ -1,7 +1,8 @@
 import * as types from '../actions/actionTypes';
 
 const initialState = {
-  sessionName: ""
+  sessionName: "",
+  sessionCreated: false
 };
 
 export default function sessionState(subState = initialState, action) {
@@ -10,6 +11,11 @@ export default function sessionState(subState = initialState, action) {
       return {
         ...subState,
         sessionName: action.sessionName
+      };
+    case types.SET_SESSION_CREATED:
+      return {
+        ...subState,
+        sessionCreated: action.isCreated
       };
     default:
       return subState;

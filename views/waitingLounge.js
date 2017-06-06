@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text, Modal } from 'react-native';
+import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text, Modal, ListView } from 'react-native';
 // import { setSessionName } from '../actions/sessionStateActions';
 
 
@@ -8,6 +8,7 @@ class WaitingLounge extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      // users: ds.cloneWithRows(['Gunnar', 'Michi', 'Petrus', 'Glenn'])
     };
   }
 
@@ -45,8 +46,10 @@ class WaitingLounge extends React.Component {
       <View style={styles.container}>
         <Text>Wait for all players to join and then press GO!</Text>
         <Button onPress={this.onClickCreate} title="GO!"></Button>
-
-
+        <ListView
+          dataSource={this.props.users}
+          renderRow={(rowData) => <Text>{rowData.info.playerName}</Text>}
+        />
       </View>
     );
   }
@@ -78,9 +81,11 @@ const styles = StyleSheet.create({
   },
 });
 
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 const mapStateToProps = (state) => {
   return {
+    users: ds.cloneWithRows(state.userInfo.users)
     // sessionName: state.sessionState.sessionName
   }
 }

@@ -1,22 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text, Modal } from 'react-native';
-import { setSessionName } from '../actions/sessionStateActions';
+import { setSessionName, setSessionCreated } from '../actions/sessionStateActions';
 import { setCurrentUserName, setCurrentUserId, addNewUser, addLocationToUser } from '../actions/userInfoActions';
 import Database from '../modules/database';
 
 class StartView extends React.Component {
   constructor(props){
     super(props);
-    this.state= {
-      showSessionNameDialog: false,
-      sessionName: null,
-      createSessionFeedback: null
+    this.state = {
+      showCreateSessionDialog: false,
+      showJoinSessionDialog: false,
+      // sessionName: null,
+      createSessionFeedback: null,
+      joinSessionFeedback: null
     };
   }
 
   componentWillMount(){
-    console.log("INIT This", this.context.store)
   }
 
   componentDidMount(){
@@ -42,7 +43,7 @@ class StartView extends React.Component {
         <Modal
           animationType={"slide"}
           transparent={false}
-          visible={this.state.showSessionNameDialog}
+          visible={this.state.showCreateSessionDialog}
           onRequestClose={this.onCloseDialog}
           >
          <View style={{marginTop: 22}}>
@@ -52,7 +53,26 @@ class StartView extends React.Component {
               value = {this.props.sessionName}
               onChangeText={(text) => this.props.setSessionName(text)}
             />
-            <Button onPress={this.onClickContinue} title="Continue"></Button>
+          <Button onPress={this.onCreateSessionContinue} title="Continue"></Button>
+
+          </View>
+         </View>
+        </Modal>
+
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.showJoinSessionDialog}
+          onRequestClose={this.onCloseDialog}
+          >
+         <View style={{marginTop: 22}}>
+          <View>
+            <Text>Name of game session to join. {this.state.joinSessionFeedback}</Text>
+            <TextInput
+              value = {this.props.sessionName}
+              onChangeText={(text) => this.props.setSessionName(text)}
+            />
+          <Button onPress={this.onJoinSessionContinue} title="Continue"></Button>
 
           </View>
          </View>
@@ -62,21 +82,19 @@ class StartView extends React.Component {
   }
 
   onClickCreate = () =>{
-    this.setState({showSessionNameDialog: true})
+    this.setState({showCreateSessionDialog: true})
   }
 
   onClickJoin = () => {
-
+    this.setState({showJoinSessionDialog: true})
   }
 
   onCloseDialog = () => {
-    this.setState({showSessionNameDialog: false});
+    this.setState({showCreateSessionDialog: false, showJoinSessionDialog: false});
   }
 
-
-  onClickContinue = () =>{
-
-    //Create the session in the firebase here.
+  onCreateSessionContinue = () =>{
+    //Create db connecition if doesn't exist
     if(global.db === null){
       global.db = new Database(this.props);
     }
@@ -90,36 +108,93 @@ class StartView extends React.Component {
     }).then(
       (success) => {
         // console.log("promise success: " + success);
-        this.setState({showSessionNameDialog: false});
+        this.setState({showCreateSessionDialog: false});
       },
       (error) => {
         this.setState({createSessionFeedback: "Unavailable. Choose another name."});
         console.log("createSession rejected: " + error);
+        throw 'sessionName taken';
       }
     ).then(()=>{
       // console.log("adding self to user path in session");
+      this.props.setSessionCreated(true);
       return global.db.addUserToSessionDB(this.props.state.userInfo.currentUser.uid, {playerName: this.props.playerName});
-    }).then(()=>{console.log("added user");}, (error)=>{console.log("addUserToSession rejected: " + error);});
-    //if successful
-    // global.db.addUserToDatabase(this.props.playerName);
+    }).then(
+      ()=>{
+        console.log("added user");
+        const { navigate } = this.props.navigation;
+        navigate('WaitingLounge');
 
+      },
+      (error)=>{console.log("addUserToSession rejected: " + error);}
+    );
 
     global.db.subscribeToNewUserAddedDB((data) => {
-      let currentUser = data.key
-      this.props.newUser(currentUser, data.val());
-      global.db.subscribeToUserPositionDB(currentUser, this._userPosition);
+      let uid = data.key
+      this.props.newUser(uid, data.val());
+      console.log("subscription trigggered. New user added: " + uid);
+      if(uid != this.props.state.userInfo.currentUser.uid){
+        global.db.subscribeToUserPositionDB(uid, this.positionCallback);
+        console.log("subscribing to position for user: " + uid);
+      }
+
     });
-
-
-
-    const { navigate } = this.props.navigation;
-    // navigate('MapView');
   }
 
-  _userPosition = (data) => {
-    console.log("User position data: ", data.key, data.val());
-    let info =  data.val();
-    this.props.newLocationToUser(this.props.state.userInfo.currentUser.uid, info);
+  onJoinSessionContinue = () =>{
+    this.setState({joinSessionFeedback: null});
+    //Create db connecition if doesn't exist
+    if(global.db === null){
+      global.db = new Database(this.props);
+    }
+
+    // console.log("trying to join session: " + this.props.sessionName);
+
+    //Here is our epic setup sequence for joining a session. First create user.
+    global.db.initializeUserDB().then((uid) => {
+      console.log("uid: ", uid);
+      this.props.setUserId(uid);
+    }).then(() =>{
+      return global.db.findSessionDB(this.props.sessionName);
+    }).then(
+      () => {
+        this.setState({showJoinSessionDialog: false});
+      },
+      (error) => {
+        this.setState({joinSessionFeedback: "Couldn't find that game session!"});
+        console.log("joinSession rejected: " + error);
+        throw 'no session found';
+      }
+    ).then(()=>{
+      console.log("adding self to user path in session");
+      this.props.setSessionCreated(true);
+      return global.db.addUserToSessionDB(this.props.state.userInfo.currentUser.uid, {playerName: this.props.playerName});
+    }).then(
+      ()=>{
+        console.log("added user");
+        const { navigate } = this.props.navigation;
+        navigate('WaitingLounge');
+
+      },
+      (error)=>{console.log("addUserToSession rejected: " + error);}
+    );
+
+    global.db.subscribeToNewUserAddedDB((data) => {
+      let uid = data.key
+      this.props.newUser(uid, data.val());
+      console.log("subscription trigggered. New user added: " + uid);
+      if(uid != this.props.state.userInfo.currentUser.uid){
+        global.db.subscribeToUserPositionDB(uid, this.positionCallback);
+        console.log("subscribing to position for user: " + uid);
+      }
+
+    });
+  }
+
+  positionCallback = (data) => {
+    let coord =  data.val();
+    console.log("User position data: ", data.key, coord);
+    this.props.newLocationToUser(data.key, coord);
     // coordinate = { latitude: info.latitude, longitude: info.longitude }
   }
 }
@@ -135,7 +210,7 @@ const styles = StyleSheet.create({
 
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("OwnProps: ", ownProps, this)
+  // console.log("OwnProps: ", ownProps, this)
   return {
     sessionName: state.sessionState.sessionName,
     playerName: state.userInfo.currentUser.name,
@@ -148,14 +223,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     setSessionName: (name) => {
       dispatch(setSessionName(name))
     },
+    setSessionCreated: (isCreated) => {
+      dispatch(setSessionCreated(isCreated))
+    },
     setPlayerName: (name) => {
       dispatch(setCurrentUserName(name))
     },
     setUserId: (uid) => {
       dispatch(setCurrentUserId(uid))
     },
-    newUser: (currentUser, info) => {
-      dispatch(addNewUser(currentUser, info))
+    newUser: (uid, info) => {
+      dispatch(addNewUser(uid, info))
     },
     newLocationToUser: (uid, info) => {
       dispatch(addLocationToUser(uid, info))

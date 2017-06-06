@@ -6,3 +6,10 @@ export function setSessionName(sessionName) {
     sessionName
   };
 }
+
+export function setSessionCreated(isCreated) {
+  return {
+    type: types.SET_SESSION_CREATED,
+    isCreated
+  };
+}
