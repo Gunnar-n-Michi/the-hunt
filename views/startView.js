@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, TextInput, View, TouchableOpacity, Button, Image, Text, Modal, Dimensions } from 'react-native';
-import { setSessionName } from '../actions/sessionStateActions';
+import { setSessionName, setSessionCreated } from '../actions/sessionStateActions';
 import { setCurrentUserName, setCurrentUserId, addNewUser, addLocationToUser } from '../actions/userInfoActions';
 import Database from '../modules/database';
 import Col from '../constants/colors'
@@ -118,6 +118,7 @@ class StartView extends React.Component {
     //Create db connecition if doesn't exist
     if(global.db === null){
       global.db = new Database(this.props);
+      console.log("Database Created!");
     }
 
     //Here is our epic setup sequence. First create user. check if session name available

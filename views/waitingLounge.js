@@ -56,6 +56,8 @@ class WaitingLounge extends React.Component {
 
   onClickCreate = () =>{
     this.setState({showSessionNameDialog: true})
+    const { navigate } = this.props.navigation;
+    navigate('mapView')
   }
 
   onClickJoin = () => {
