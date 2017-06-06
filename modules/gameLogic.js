@@ -2,17 +2,61 @@ import * as helpers from '../utils/helpers';
 import { getState } from '../store/store';
 
 export default class GameLogic {
+  // 
+  // var markers = [
+  //   {
+  //     shouldRender: true,
+  //     title: "Hunter",
+  //     iconType: "checkpoint",
+  //     description: "Checkpoint 1",
+  //     coordinate: {
+  //       latitude: 48.138295,
+  //       longitude: 11.515238,
+  //     },
+  //   },
+  //   {
+  //     shouldRender: true,
+  //     title: "Hunter",
+  //     iconType: "prey",
+  //     description: "Michael",
+  //     coordinate: {
+  //       latitude: 48.238295,
+  //       longitude: 11.515238,
+  //     },
+  //   },
+  //   {
+  //     shouldRender: true,
+  //     title: "Hunter",
+  //     iconType: "hunter",
+  //     description: "Gunnar",
+  //     coordinate: {
+  //       latitude: LATITUDE,
+  //       longitude: LONGITUDE,
+  //     },
+  //   },
+  // ];
+
+
   constructor(props) {
     console.log("GameLogic: ", props);
-    this.timer = new helpers.Monoflop(this.handleGeoLocations)
     this.props = props
-
-    this.timer.start('Send out positions', 10000)
   }
 
-  handleGeoLocations = (_data) => {
+  getUserGeoPosition(callback) {
+    this.timer = new helpers.Monoflop(this.handleGeoLocations)
+  }
+
+  handleGeoLocations = (callback) => {
     console.log(_data, getState())
-    this.timer.start('Update:', 10000)
+    let geoPos = getState().currentUser.geoposition
+    // TODO: The following part describes the pseudo code which is needed to rneder
+    // the current state to the ma
+    // UPDATE MARKER OBJECT HERE
+    // THEN CALLBACK
+    callback(geoPos)
+    this.timer.start(callback, 10000)
+
   }
+
 
 }
