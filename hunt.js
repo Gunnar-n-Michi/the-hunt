@@ -20,7 +20,10 @@ import {
   View
 } from 'react-native';
 
+// global database
 global.db = null;
+// global gameLogic
+global.gL = null;
 
 var currentUser;
 export default class hunt extends Component {
@@ -68,6 +71,7 @@ export default class hunt extends Component {
     }
   }
 
+
 }
 
 //
@@ -75,9 +79,9 @@ export default class hunt extends Component {
 const AppNavigator = StackNavigator (
   {
     StartView: {screen: StartView},
-    WaitingLounge: {screen: WaitingLounge},
-    SessionView: { screen: SessionView },
     MapView: { screen: MapView },
+    WaitingLounge: {screen: WaitingLounge},
+    SessionView: { screen: SessionView }
   },
   {
     navigationOptions: {

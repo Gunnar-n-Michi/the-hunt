@@ -33,7 +33,7 @@ class SessionView extends React.Component {
   }
 
   componentDidMount(){
-    console.log ('DB PROP: ', this.props);
+    console.log ('Session View Mounted: ', this.props);
   }
 
 }

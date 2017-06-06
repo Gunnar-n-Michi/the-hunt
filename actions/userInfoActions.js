@@ -14,6 +14,14 @@ export function setCurrentUserName(name) {
   };
 }
 
+
+export function setCurrentUserRole(role) {
+  return {
+    type: types.SET_CURRENT_USER_ROLE,
+    role
+  };
+}
+
 export function addLocationToUser(uid, location) {
   return {
     type: types.ADD_LOCATION_TO_USER,
@@ -27,5 +35,13 @@ export function addNewUser(uid, info) {
     type: types.ADD_NEW_USER,
     uid,
     info
+  };
+}
+
+export function setUserRole(uid, role) {
+  return {
+    type: types.SET_USER_ROLE,
+    uid,
+    role
   };
 }

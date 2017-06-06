@@ -1,7 +1,6 @@
-import * as firebase from 'firebase';
 import { AsyncStorage } from 'react-native';
-import { store } from '../store/store';
-import { setCurrentUserId } from '../actions/userInfoActions'
+import * as firebase from 'firebase';
+
 
 export default class Database {
   constructor(props) {
