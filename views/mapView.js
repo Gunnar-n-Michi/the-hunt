@@ -58,6 +58,37 @@ const markers = [
   },
 ];
 
+class FadeInView extends React.Component {
+  state = {
+    fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
+  }
+
+
+
+  render() {
+    Animated.timing(
+      this.state.fadeAnim,
+      {
+        toValue: this.props.opacity,
+        duration: 300,
+      }
+    ).start();
+
+    let { fadeAnim } = this.state;
+
+    return (
+      <Animated.View
+        style={{
+          ...this.props.style,
+          opacity: fadeAnim,
+        }}
+      >
+        {this.props.children}
+      </Animated.View>
+    );
+  }
+}
+
 class MapView extends React.Component {
   constructor(props) {
     super(props);
@@ -92,14 +123,14 @@ class MapView extends React.Component {
           )
         ))}
       </MapContainer>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={this.animate}
-            style={[styles.bubble, styles.button]}
-          >
-            <Text>Animate</Text>
-          </TouchableOpacity>
+      {helpers.conditionalRender(
+        true,
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}} opacity={1}>
+            <Text>Some notification</Text>
+          </FadeInView>
         </View>
+      )}
       </View>
     );
   }
